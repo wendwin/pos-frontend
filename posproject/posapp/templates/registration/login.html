@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class=" row align-items-center justify-content-center py-5" style="min-height: 100vh;">
+        <div class="col-md-5">
+            <div class="card rounded rounded-4" style="width: 100%;">
+                <div class="card-body p-5 ">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <h2 class="text-center">Login</h2>
+                        <h4 class="mb-3">MyPos</h4>
+                        <div class="mb-3">
+                            <label for="username" class="mb-1">Username</label>
+                            <input type="text" name="username" class="form-control " placeholder="Masukkan Username"
+                                value="" required autofocus>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="mb-1">Password</label>
+                            <input type="password" name="password" class="form-control " placeholder="Masukkan Password"
+                                value="" required>
+                        </div>
+                        <button class="btn btn-primary d-block w-100" type="submit">Sign In</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

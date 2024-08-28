@@ -1,0 +1,18 @@
+{% if user.is_authenticated %}
+<h4 class="mb-4">Kasir: {{ user.username }}</h4>
+{% endif %}
+
+<div class="nav-btn-search nav-button d-flex flex-column d-md-flex flex-md-row align-items-center gap-4">
+    <div class="filter-search mb-4 mb-md-0 order-2 order-md-1">
+        <a href="{% url 'home' %}" class="btn {% if request.path == '/' %}active{% endif %}">Makanan</a>
+        <a href="{% url 'minuman' %}" class="btn  {% if request.path == '/minuman/' %}active{% endif %}">Minuman</a>
+        <a href="{% url 'snack' %}" class="btn  {% if request.path == '/snack/' %}active{% endif %}">Snack</a>
+        <a href="{% url 'paket' %}" class="btn  {% if request.path == '/paket/' %}active{% endif %}">Paket</a>
+    </div>
+    <div class="box-search order-1 order-md-2">
+        <input type="text" name="" id="search" placeholder="Cari items...">
+        <div class="">
+            <i class="bi bi-search"></i>
+        </div>
+    </div>
+</div>

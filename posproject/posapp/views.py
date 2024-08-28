@@ -6,3 +6,15 @@ from django.conf import settings
 @login_required(login_url=settings.LOGIN_URL)
 def index(request):
     return render(request, 'index.html')
+
+@login_required(login_url=settings.LOGIN_URL)
+def minuman(request):
+    return render(request, 'minuman.html')
+
+@login_required(login_url=settings.LOGIN_URL)
+def minuman(request):
+    return render(request, 'snack.html')
+
+@login_required(login_url=settings.LOGIN_URL)
+def minuman(request):
+    return render(request, 'paket.html')

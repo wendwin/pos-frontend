@@ -6,3 +6,30 @@ nav.navbar-custom {
     background-color: #ffffff;
     border-bottom: 1px solid #010101;
 }
+
+.nav-button .btn.active {
+    background-color: #3f3f3f;
+    color: #f7f7f7;
+}
+
+.box-search {
+    background-color: #f7f7f7;
+    padding: 5px 15px;
+    width: 300px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid #f7f7f7;
+}
+
+.box-search input {
+    width: 90%;
+    border: none;
+    background-color: #f7f7f7;
+}
+
+.box-search input:focus {
+    outline: none;
+    border: none;
+}

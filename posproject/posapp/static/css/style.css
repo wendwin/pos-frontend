@@ -2,6 +2,10 @@ body {
     background-color: #ffffff;
 }
 
+a {
+    text-decoration: none;
+}
+
 nav.navbar-custom {
     background-color: #ffffff;
     border-bottom: 1px solid #010101;
@@ -32,4 +36,47 @@ nav.navbar-custom {
 .box-search input:focus {
     outline: none;
     border: none;
+}
+
+
+.btn-quantity {
+    background-color: #f7f7f7;
+    border: 1px solid #3f3f3f;
+}
+
+.order-amount .text {
+    color: #838383;
+}
+
+.order-customer input {
+    border-color: #d2d2d2;
+}
+
+.order-customer input:focus {
+    border-color: #3f3f3f;
+    box-shadow: none;
+}
+
+.btn-order {
+    background-color: #3f3f3f;
+    color: #f7f7f7;
+}
+
+.btn-order:hover {
+    border: 1px solid #3f3f3f;
+    /* background-color: #3f3f3f; */
+    color: #3f3f3f;
+}
+
+.btn-delete:hover {
+    background-color: rgb(255, 105, 105);
+}
+
+.card-product:hover {
+    background-color: #f7f7f7;
+}
+
+.card-product img {
+    width: 50%;
+    margin: auto;
 }

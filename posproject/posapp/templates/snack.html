@@ -2,11 +2,13 @@
 {% load static %}
 
 {% block content %}
-{% include 'partials/navbar.html' %}
+{% include 'partials/navbar/navbar.html' %}
 
 <div class="container">
     <div class="mt-4">
-        {% include 'partials/nav-button.html' %}
+        {% include 'partials/navbar/nav-button.html' %}
+
+        {% include 'partials/menu/menu.html' %}
     </div>
 </div>
 {% endblock %}

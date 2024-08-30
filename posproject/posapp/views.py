@@ -5,16 +5,24 @@ from django.conf import settings
 # Create your views here.
 @login_required(login_url=settings.LOGIN_URL)
 def index(request):
-    return render(request, 'index.html', {'nilai': range(8)})
+    context = {
+        'nilai': range(8),
+        'funcFetch': 'itemMakananList()'
+    }
+    return render(request, 'index.html', context=context)
 
 @login_required(login_url=settings.LOGIN_URL)
 def minuman(request):
-    return render(request, 'minuman.html')
+    context = {
+        'nilai': range(8),
+        'funcFetch': 'itemMinumanList()'
+    }
+    return render(request, 'minuman.html', context=context)
 
 @login_required(login_url=settings.LOGIN_URL)
-def minuman(request):
+def snack(request):
     return render(request, 'snack.html')
 
 @login_required(login_url=settings.LOGIN_URL)
-def minuman(request):
+def paket(request):
     return render(request, 'paket.html')

@@ -6,23 +6,23 @@ from django.conf import settings
 @login_required(login_url=settings.LOGIN_URL)
 def index(request):
     context = {
-        'nilai' : range(6),
-        'funcFetch' : 'itemMakananList()'
+        'nilai': range(8),
+        'funcFetch': 'itemMakananList()'
     }
     return render(request, 'index.html', context=context)
 
 @login_required(login_url=settings.LOGIN_URL)
 def minuman(request):
     context = {
-        'nilai' : range(6),
-        'funcFetch' : 'itemMinumanList()'
+        'nilai': range(8),
+        'funcFetch': 'itemMinumanList()'
     }
     return render(request, 'minuman.html', context=context)
 
 @login_required(login_url=settings.LOGIN_URL)
-def minuman(request):
+def snack(request):
     return render(request, 'snack.html')
 
 @login_required(login_url=settings.LOGIN_URL)
-def minuman(request):
+def paket(request):
     return render(request, 'paket.html')

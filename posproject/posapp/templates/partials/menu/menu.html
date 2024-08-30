@@ -3,19 +3,19 @@
 <div class="row mt-4" x-data="dataItems" x-init="{{ funcFetch }}">
     <div class="col-md-7">
         <div class="row">
-            {% for i in nilai %}
-            <div class="col-6 col-lg-4 mb-4">
-                <a href="">
-                    <div class="card card-product" style="width: 100%;">
-                        <img src="{% static 'images/burger.png' %}" alt="" class="product-img">
-                        <div class="card-body text-center d-lg-flex justify-content-between py-2 px-3">
-                            <h6 class="card-title ">Makanan 1</h6>
-                            <h6 class="">Rp. 14.000</h6>
+            <template x-for="item in itemsProduk" :key="item.id_item">
+                <div class="col-6 col-lg-4 mb-4">
+                    <a href="">
+                        <div class="card card-product" style="width: 100%;">
+                            <img :src="'{% static 'images/' %}' + item.gambar" alt="" class="product-img">
+                            <div class="card-body text-center d-lg-flex justify-content-between py-2 px-3">
+                                <h6 class="card-title " x-text="item.nama_item"></h6>
+                                <h6 class="" x-text="'Rp. ' + item.harga"></h6>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
+                    </a>
+                </div>
+            </template>
         </div>
     </div>
     <div class="col-md-5">

@@ -23,56 +23,66 @@
             <div class="card" style="width: 100%;">
                 <div class="card-body card-order">
                     <h4 class="mb-4"><i class="bi bi-bag"></i> Detail Pesanan</h4>
-                    <template x-for="item in $store.cartData.items">
-                        <div class="order-content mb-3 d-xl-flex justify-content-between align-items-center">
-                            <div class="order-detail d-flex gap-3">
-                                <img :src="'{% static 'images/' %}' + item.gambar" alt="" width="80px"
-                                    class="rounded rounded-2">
-                                <div class="d-flex flex-column gap-3">
-                                    <div class="">
-                                        <span style="font-weight: 600;" x-text="item.nama_item"></span>
-                                    </div>
-                                    <div class="">
-                                        <span class="" x-text="'Rp. ' + item.harga"></span>
+                    <template x-if="$store.cartData.items ">
+                        <template x-for="item in $store.cartData.items">
+                            <div class="order-content mb-3 d-xl-flex justify-content-between align-items-center">
+                                <div class="order-detail d-flex gap-3">
+                                    <img :src="'{% static 'images/' %}' + item.gambar" alt="" width="80px"
+                                        class="rounded rounded-2">
+                                    <div class="d-flex flex-column gap-3">
+                                        <div class="">
+                                            <span style="font-weight: 600;" x-text="item.nama_item"></span>
+                                        </div>
+                                        <div class="">
+                                            <span class="" x-text="'Rp. ' + item.harga"></span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-none d-xl-block">
-                                <a class=" btn btn-sm btn-quantity rounded-circle m-1"
-                                    @click.prevent="$store.cartData.kurang(item)"><i class="bi bi-dash"></i></a>
-                                <span class="m-2" x-text="item.quantity"></span>
-                                <a class="btn btn-sm btn-quantity rounded-circle m-1"
-                                    @click.prevent="$store.cartData.add(item)"><i class="bi bi-plus"></i></a>
-                            </div>
-                            <div
-                                class="order-button mt-3 d-flex justify-content-between align-items-center d-xl-block mt-lg-0">
-                                <div class="">
-                                    <div class="d-xl-none">
-                                        <a class=" btn btn-sm btn-quantity rounded-circle m-lg-2"
-                                            @click.prevent="$store.cartData.kurang(item)"><i class="bi bi-dash"></i></a>
-                                        <span class="mx-2" x-text="item.quantity"></span>
-                                        <a class="btn btn-sm btn-quantity rounded-circle m-lg-2"
-                                            @click.prevent="$store.cartData.add(item)"><i class="bi bi-plus"></i></a>
+                                <div class="d-none d-xl-block">
+                                    <a class=" btn btn-sm btn-quantity rounded-circle m-1"
+                                        @click.prevent="$store.cartData.kurang(item)"><i class="bi bi-dash"></i></a>
+                                    <span class="m-2" x-text="item.quantity"></span>
+                                    <a class="btn btn-sm btn-quantity rounded-circle m-1"
+                                        @click.prevent="$store.cartData.add(item)"><i class="bi bi-plus"></i></a>
+                                </div>
+                                <div
+                                    class="order-button mt-3 d-flex justify-content-between align-items-center d-xl-block mt-lg-0">
+                                    <div class="">
+                                        <div class="d-xl-none">
+                                            <a class=" btn btn-sm btn-quantity rounded-circle m-lg-2"
+                                                @click.prevent="$store.cartData.kurang(item)"><i
+                                                    class="bi bi-dash"></i></a>
+                                            <span class="mx-2" x-text="item.quantity"></span>
+                                            <a class="btn btn-sm btn-quantity rounded-circle m-lg-2"
+                                                @click.prevent="$store.cartData.add(item)"><i
+                                                    class="bi bi-plus"></i></a>
+                                        </div>
+                                        <div class="d-none d-xl-block ms-5">
+                                            <a @click.prevent="$store.cartData.delete(item)"
+                                                class="btn btn-sm btn-delete"><i class="bi bi-trash3"></i></a>
+                                        </div>
                                     </div>
-                                    <div class="d-none d-xl-block ms-5">
+                                    <div class="mt-lg-2">
+                                        <span class="m-2" x-text="'Rp. ' + item.total"></span>
                                         <a @click.prevent="$store.cartData.delete(item)"
-                                            class="btn btn-sm btn-delete"><i class="bi bi-trash3"></i></a>
+                                            class="btn btn-sm btn-delete rounded-circle d-xl-none"><i
+                                                class="bi bi-trash3"></i></a>
                                     </div>
                                 </div>
-                                <div class="mt-lg-2">
-                                    <span class="m-2" x-text="'Rp. ' + item.total"></span>
-                                    <a @click.prevent="$store.cartData.delete(item)"
-                                        class="btn btn-sm btn-delete rounded-circle d-xl-none"><i
-                                            class="bi bi-trash3"></i></a>
-                                </div>
                             </div>
-                        </div>
+                        </template>
                     </template>
                     <div class="order-amount">
                         <hr>
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center"
+                            x-init="$store.cartData.getTotalPay()">
                             <p class="text fs-5">Total</p>
-                            <p class="fs-5 fw-semibold" x-text="$store.cartData.total"></p>
+                            <template x-if="!$store.cartData.total">
+                                <p class="fs-5 fw-semibold">Rp. -</p>
+                            </template>
+                            <template x-if="$store.cartData.total">
+                                <p class="fs-5 fw-semibold" x-text="'Rp. ' + $store.cartData.total"></p>
+                            </template>
                         </div>
                     </div>
                     <div class="order-customer">

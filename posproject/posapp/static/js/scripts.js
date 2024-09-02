@@ -8,6 +8,14 @@ document.getElementById("myForm").onsubmit = function (event) {
   });
 };
 
+const rupiah = (number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  }).format(number);
+};
+
 document.addEventListener("alpine:init", () => {
   Alpine.data("dataItems", () => ({
     itemsProduk: [],

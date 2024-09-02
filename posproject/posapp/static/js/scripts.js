@@ -1,5 +1,5 @@
 document.getElementById("myForm").onsubmit = function (event) {
-  event.preventDefault(); // Mencegah pengiriman form secara otomatis
+  event.preventDefault();
 
   Swal.fire({
     title: "Pesanan Berhasil",
@@ -45,6 +45,8 @@ document.addEventListener("alpine:init", () => {
 
   Alpine.store("cartData", {
     items: [],
+    customer: "",
+    nominal: "",
 
     // total keseluran
     total: 0,

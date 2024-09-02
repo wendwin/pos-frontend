@@ -85,19 +85,22 @@
                             </template>
                         </div>
                     </div>
-                    <div class="order-customer">
+                    <div class="order-customer" x-data>
                         <form id="myForm">
                             <div class="d-lg-flex justify-content-between">
                                 <div class="mb-3 customer">
                                     <label for="customer" class="form-label">Customer</label>
-                                    <input type="text" class="form-control " id="customer">
+                                    <input type="text" class="form-control " id="customer"
+                                        x-model="$store.cartData.customer" required>
                                 </div>
                                 <div class="mb-3 nominal">
                                     <label for="nominal" class="form-label">Nominal</label>
-                                    <input type="number" class="form-control " id="nominal" placeholder="Rp.">
+                                    <input type="number" class="form-control " id="nominal" placeholder="Rp."
+                                        x-model="$store.cartData.nominal" required>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-order fw-medium d-block w-100">Order</button>
+                            <button type="submit" class="btn btn-order fw-medium d-block w-100"
+                                :class="{ 'disabled': $store.cartData.items.length == 0 || $store.cartData.nominal == 0 }">Order</button>
                         </form>
                     </div>
                 </div>

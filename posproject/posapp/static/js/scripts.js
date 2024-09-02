@@ -8,6 +8,14 @@ document.getElementById("myForm").onsubmit = function (event) {
   });
 };
 
+const rupiah = (number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  }).format(number);
+};
+
 document.addEventListener("alpine:init", () => {
   Alpine.data("dataItems", () => ({
     itemsProduk: [],
@@ -47,6 +55,11 @@ document.addEventListener("alpine:init", () => {
       this.items = getCart;
     },
 
+    getTotalPay() {
+      let getTotalPay = JSON.parse(localStorage.getItem("totalPay"));
+      this.total = getTotalPay;
+    },
+
     add(newItem) {
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -73,9 +86,18 @@ document.addEventListener("alpine:init", () => {
         this.total += parseInt(newItem.harga);
       }
 
+      let totalPay = cart.reduce(
+        (sum, item) => sum + parseFloat(item.total),
+        0
+      );
+
       localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem("totalPay", totalPay);
+
       let getCart = JSON.parse(localStorage.getItem("cart"));
       this.items = getCart;
+      let getTotalPay = JSON.parse(localStorage.getItem("totalPay"));
+      this.total = getTotalPay;
     },
 
     kurang(itemKurang) {
@@ -93,7 +115,16 @@ document.addEventListener("alpine:init", () => {
           this.total -= parseInt(itemKurang.harga);
         }
       }
+
+      let totalPay = cart.reduce(
+        (sum, item) => sum + parseFloat(item.total),
+        0
+      );
+
       localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem("totalPay", totalPay);
+      let getTotalPay = JSON.parse(localStorage.getItem("totalPay"));
+      this.total = getTotalPay;
       this.getListItem();
     },
 
@@ -135,7 +166,15 @@ document.addEventListener("alpine:init", () => {
         }
       }
 
+      let totalPay = cart.reduce(
+        (sum, item) => sum + parseFloat(item.total),
+        0
+      );
+
       localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem("totalPay", totalPay);
+      let getTotalPay = JSON.parse(localStorage.getItem("totalPay"));
+      this.total = getTotalPay;
       this.getListItem();
     },
   });

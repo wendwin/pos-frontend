@@ -85,20 +85,32 @@
                             </template>
                         </div>
                     </div>
-                    <div class="order-customer">
+                    <div class="order-customer" x-data>
                         <form id="myForm">
                             <div class="d-lg-flex justify-content-between">
                                 <div class="mb-3 customer">
                                     <label for="customer" class="form-label">Customer</label>
-                                    <input type="text" class="form-control " id="customer">
+                                    <input type="text" class="form-control " id="customer"
+                                        x-model="$store.cartData.customer" required>
                                 </div>
                                 <div class="mb-3 nominal">
                                     <label for="nominal" class="form-label">Nominal</label>
-                                    <input type="number" class="form-control " id="nominal" placeholder="Rp.">
+                                    <input type="number" class="form-control " id="nominal" placeholder="Rp."
+                                        x-model="$store.cartData.nominal" required>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-order fw-medium d-block w-100">Order</button>
+                            <a @click.prevent="$store.cartData.order()" class="btn btn-order fw-medium d-block w-100"
+                                :class="{ 'disabled': !$store.cartData.items || $store.cartData.nominal == 0 }">Order</a>
                         </form>
+                    </div>
+                    <div class="mt-3" x-init="$store.cartData.getMessage()">
+                        <template x-if="$store.cartData.message">
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert"> <span
+                                    x-text="$store.cartData.message"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                                    @click="sessionStorage.clear();"></button>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>

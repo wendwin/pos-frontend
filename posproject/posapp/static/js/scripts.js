@@ -1,5 +1,5 @@
 document.getElementById("myForm").onsubmit = function (event) {
-  event.preventDefault(); // Mencegah pengiriman form secara otomatis
+  event.preventDefault();
 
   Swal.fire({
     title: "Pesanan Berhasil",
@@ -45,10 +45,22 @@ document.addEventListener("alpine:init", () => {
 
   Alpine.store("cartData", {
     items: [],
+    customer: "",
+    nominal: "",
+    message: "",
 
     // total keseluran
     total: 0,
     quantity: 0,
+
+    getMessage() {
+      let message = sessionStorage.getItem("flashMessage");
+      if (message) {
+        this.message = message;
+      } else {
+        return false;
+      }
+    },
 
     getListItem() {
       let getCart = JSON.parse(localStorage.getItem("cart"));
@@ -176,6 +188,46 @@ document.addEventListener("alpine:init", () => {
       let getTotalPay = JSON.parse(localStorage.getItem("totalPay"));
       this.total = getTotalPay;
       this.getListItem();
+    },
+
+    order() {
+      const now = new Date().toISOString();
+      const storedData = JSON.parse(localStorage.getItem("cart"));
+      const storedPay = JSON.parse(localStorage.getItem("totalPay"));
+
+      items = storedData.map((item) => {
+        if (this.nominal >= item.total) {
+          const data = {
+            tgl_pesanan: now,
+            sub_total: "0",
+            pajak: "0",
+            total: storedPay,
+            status: "baru",
+            customer: this.customer,
+            pesanan_items: storedData.map((item) => ({
+              id_item: item.id_item,
+              quantity: item.quantity,
+              harga_item: item.harga,
+              total_harga: item.total,
+            })),
+          };
+
+          fetch("http://127.0.0.1:8000/create-pesanan/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((data) => console.log("Success:", data))
+            .catch((error) => console.error("Error:", error));
+        } else {
+          message = "Nominal tidak sesuai!";
+          sessionStorage.setItem("flashMessage", message);
+          window.location.reload();
+        }
+      });
     },
   });
 });

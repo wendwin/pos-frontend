@@ -195,39 +195,46 @@ document.addEventListener("alpine:init", () => {
       const storedData = JSON.parse(localStorage.getItem("cart"));
       const storedPay = JSON.parse(localStorage.getItem("totalPay"));
 
-      items = storedData.map((item) => {
-        if (this.nominal >= item.total) {
-          const data = {
-            tgl_pesanan: now,
-            sub_total: "0",
-            pajak: "0",
-            total: storedPay,
-            status: "baru",
-            customer: this.customer,
-            pesanan_items: storedData.map((item) => ({
-              id_item: item.id_item,
-              quantity: item.quantity,
-              harga_item: item.harga,
-              total_harga: item.total,
-            })),
-          };
+      if (this.nominal >= storedPay) {
+        const data = {
+          tgl_pesanan: now,
+          sub_total: "0",
+          pajak: "0",
+          total: storedPay,
+          status: "baru",
+          customer: this.customer,
+          pesanan_items: storedData.map((item) => ({
+            id_item: item.id_item,
+            quantity: item.quantity,
+            harga_item: item.harga,
+            total_harga: item.total,
+          })),
+        };
 
-          fetch("http://127.0.0.1:8000/create-pesanan/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          })
-            .then((response) => response.json())
-            .then((data) => console.log("Success:", data))
-            .catch((error) => console.error("Error:", error));
-        } else {
-          message = "Nominal tidak sesuai!";
-          sessionStorage.setItem("flashMessage", message);
-          window.location.reload();
-        }
-      });
+        fetch("http://127.0.0.1:8000/create-pesanan/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((data) => console.log("Success:", data))
+          .catch((error) => console.error("Error:", error));
+      } else {
+        message = "Nominal tidak sesuai!";
+        sessionStorage.setItem("flashMessage", message);
+        window.location.reload();
+      }
+      // items = storedData.map((item) => {
+      //   if (this.nominal >= item.total) {
+
+      // } else {
+      //   message = "Nominal tidak sesuai!";
+      //   sessionStorage.setItem("flashMessage", message);
+      //   window.location.reload();
+      // }
+      // });
     },
   });
 });

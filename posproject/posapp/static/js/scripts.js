@@ -1,12 +1,12 @@
-document.getElementById("myForm").onsubmit = function (event) {
-  event.preventDefault();
+// document.getElementById("myForm").onsubmit = function (event) {
+//   event.preventDefault();
 
-  Swal.fire({
-    title: "Pesanan Berhasil",
-    text: "Kembalian: Rp. 6.000",
-    icon: "success",
-  });
-};
+//   Swal.fire({
+//     title: "Pesanan Berhasil",
+//     text: "Kembalian: Rp. 6.000",
+//     icon: "success",
+//   });
+// };
 
 const rupiah = (number) => {
   return new Intl.NumberFormat("id-ID", {
@@ -52,6 +52,35 @@ document.addEventListener("alpine:init", () => {
     // total keseluran
     total: 0,
     quantity: 0,
+
+    dataVal: [],
+
+    successAlert(kembalian) {
+      kembalian = rupiah(kembalian);
+      Swal.fire({
+        title: "Pesanan Berhasil",
+        text: `Kembalian: ${kembalian}`,
+        icon: "success",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.clear();
+          window.location.reload();
+        }
+      });
+    },
+
+    errorAlert() {
+      Swal.fire({
+        icon: "error",
+        title: "Pesanan Gagal",
+        text: "Transaksi tidak dapat diproses!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.clear();
+          window.location.reload();
+        }
+      });
+    },
 
     getMessage() {
       let message = sessionStorage.getItem("flashMessage");
@@ -190,51 +219,110 @@ document.addEventListener("alpine:init", () => {
       this.getListItem();
     },
 
-    order() {
+    orderProcess() {
       const now = new Date().toISOString();
       const storedData = JSON.parse(localStorage.getItem("cart"));
       const storedPay = JSON.parse(localStorage.getItem("totalPay"));
+      kembalian = 0;
+
+      const data = {
+        tgl_pesanan: now,
+        sub_total: "0",
+        pajak: "0",
+        total: storedPay,
+        status: "baru",
+        customer: this.customer,
+        pesanan_items: storedData.map((item) => ({
+          id_item: item.id_item,
+          quantity: item.quantity,
+          harga_item: item.harga,
+          total_harga: item.total,
+        })),
+      };
+
+      fetch("http://127.0.0.1:8000/create-pesanan/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log("Success:", data))
+        .catch((error) => console.error("Error:", error));
+
+      if (this.nominal > storedPay) {
+        kembalian += this.nominal - storedPay;
+      }
+
+      this.successAlert(kembalian);
+    },
+
+    async validasiTransaksi() {
+      const storedData = JSON.parse(localStorage.getItem("cart"));
+      const storedPay = JSON.parse(localStorage.getItem("totalPay"));
+      const dataDb = storedData.map((item) => item.id_item);
+      let isOrderValid = true;
+      let totalCalculated = 0;
+
+      for (let i = 0; i < storedData.length; i++) {
+        try {
+          const resp = await fetch(`http://127.0.0.1:8000/items/${dataDb[i]}/`);
+          const data = await resp.json();
+          this.dataVal.push(data);
+        } catch (e) {
+          console.log(e);
+          isOrderValid = false;
+        }
+      }
+
+      storedData.forEach((item) => {
+        const dbData = this.dataVal.find((el) => el.id_item === item.id_item);
+
+        if (dbData) {
+          if (item.harga === dbData.harga) {
+            console.log("Harga Item Valid");
+
+            totalCalculated += parseInt(dbData.harga) * item.quantity;
+
+            if (item.total !== parseInt(dbData.harga) * item.quantity) {
+              console.log("Total Item Invalid!");
+              isOrderValid = false;
+              this.errorAlert();
+            }
+          } else {
+            console.log("Harga Item Invalid!");
+            isOrderValid = false;
+            this.errorAlert();
+          }
+        } else {
+          console.log("Item tidak ditemukan di database");
+          isOrderValid = false;
+          this.errorAlert();
+        }
+      });
+
+      if (isOrderValid) {
+        if (storedPay === totalCalculated) {
+          console.log("Total harga keseluruhan valid");
+          this.orderProces();
+        } else {
+          console.log("Total harga keseluruhan tidak valid!");
+          this.errorAlert();
+        }
+      }
+    },
+
+    order() {
+      const storedPay = JSON.parse(localStorage.getItem("totalPay"));
 
       if (this.nominal >= storedPay) {
-        const data = {
-          tgl_pesanan: now,
-          sub_total: "0",
-          pajak: "0",
-          total: storedPay,
-          status: "baru",
-          customer: this.customer,
-          pesanan_items: storedData.map((item) => ({
-            id_item: item.id_item,
-            quantity: item.quantity,
-            harga_item: item.harga,
-            total_harga: item.total,
-          })),
-        };
-
-        fetch("http://127.0.0.1:8000/create-pesanan/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        })
-          .then((response) => response.json())
-          .then((data) => console.log("Success:", data))
-          .catch((error) => console.error("Error:", error));
+        this.validateTransaksi();
       } else {
         message = "Nominal tidak sesuai!";
         sessionStorage.setItem("flashMessage", message);
         window.location.reload();
       }
-      // items = storedData.map((item) => {
-      //   if (this.nominal >= item.total) {
-
-      // } else {
-      //   message = "Nominal tidak sesuai!";
-      //   sessionStorage.setItem("flashMessage", message);
-      //   window.location.reload();
-      // }
-      // });
     },
   });
 });
